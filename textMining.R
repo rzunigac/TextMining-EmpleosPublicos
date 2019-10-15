@@ -14,3 +14,15 @@ source("funciones.R")
 
 datos_empleos <- cargar_csv_as_tibble()
 
+df_corpus <- datos_empleos %>%
+  #filter(doc_id < 20) %>%
+  mutate(text = paste(Cargo, Objetivo_del_cargo)) %>%
+  select(doc_id, text) %>%
+  as.data.frame()
+
+corpus <- tm::Corpus(tm::DataframeSource(df_corpus))
+
+tm::inspect(corpus[1:2])
+
+NLP::meta(corpus[[1]], "id")
+
