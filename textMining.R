@@ -16,7 +16,12 @@ datos_empleos <- cargar_csv_as_tibble()
 
 df_corpus <- datos_empleos %>%
   #filter(doc_id < 20) %>%
-  mutate(text = paste(Cargo, Objetivo_del_cargo)) %>%
+  mutate(text = paste(Cargo, 
+                      if_else(is.na(Objetivo_del_cargo), "", Objetivo_del_cargo),
+                      Area_de_trabajo,
+                      sep = " "
+                      )
+         ) %>%
   select(doc_id, text) %>%
   as.data.frame()
 
