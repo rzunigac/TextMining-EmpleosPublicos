@@ -84,6 +84,7 @@ cargar_csv_as_tibble <- function(file = 'df_EmpleoPublico.csv'){
     rename(Tipo_de_vacante = `Tipo de Vacante`) %>%
     rename(Area_de_trabajo = `Ãrea de Trabajo`) %>%
     ## Limpiamos columnas con texto
+    mutate(doc_id = as.integer(doc_id)) %>%
     mutate(Cargo = corregir_textos(Cargo)) %>%
     mutate(Ciudad = corregir_textos(Ciudad)) %>%
     mutate(Institucion_Entidad = corregir_textos(Institucion_Entidad)) %>%
