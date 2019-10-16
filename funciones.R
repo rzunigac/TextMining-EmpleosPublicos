@@ -99,7 +99,34 @@ cargar_csv_as_tibble <- function(file = 'df_EmpleoPublico.csv'){
   return(d)
 }
 
-
+CrearMatrizDocumentos <- function(corpus, type='TermDocument', weight='Tf'){
+  # Utiliza funci?n "tm_map" de tm para limpiar/normalizar palabras del corpus
+  corpus <- tm::tm_map(corpus, tm::removeNumbers)
+  corpus <- tm::tm_map(corpus, tolower)
+  corpus <- tm::tm_map(corpus, tm::removePunctuation)
+  corpus <- tm::tm_map(corpus, function(x) tm::removeWords(x, tm::stopwords("es")))
+  corpus <- tm::tm_map(corpus, tm::stemDocument, language = "spanish")
+  
+  # Crear matrix de terminos desde el corpus
+  if(type == 'TermDocument'){
+    dtm <- tm::TermDocumentMatrix(corpus)
+  }else if (type == 'DocumentTerm') {
+    dtm <- tm::DocumentTermMatrix(corpus)
+  } else {
+    return(1)
+  }
+  
+  # Generar la matrix de pesos TF (o tambien puede usar: TF x IDF)
+  if(weight == 'Tf'){
+    dtm <- tm::weightTf(dtm)
+  }else if (weight == 'TfIdf') {
+    dtm <- tm::weightTfIdf(dtm)
+  } else {
+    return(2)
+  }
+  
+  return(dtm)
+}
 
 
 
