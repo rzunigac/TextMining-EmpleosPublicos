@@ -10,7 +10,7 @@ library(magrittr)
 # Paso 3 generar un vector con los datos que nos interesan. Yo juntaría cargo y objetivo.
 # Paso 4
 
-source("funciones.R")
+source("funciones.R", encoding="utf-8")
 
 datos_empleos <- cargar_csv_as_tibble()
 
@@ -26,8 +26,11 @@ df_corpus <- datos_empleos %>%
   as.data.frame()
 
 corpus <- tm::Corpus(tm::DataframeSource(df_corpus))
+#tm::inspect(corpus[1:2])
+#NLP::meta(corpus[[1]], "id")
 
-tm::inspect(corpus[1:2])
+dtm <- CrearMatrizDocumentos(corpus, type='TermDocument', weight='Tf')
 
-NLP::meta(corpus[[1]], "id")
+
+
 
