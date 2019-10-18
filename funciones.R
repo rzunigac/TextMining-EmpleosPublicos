@@ -63,7 +63,24 @@ corregir_textos <- function(string){
   return(string)
 }
 
-cargar_csv_as_tibble <- function(file = 'df_EmpleoPublico.csv'){
+elimina_tildes <- function(string){
+  Encoding(string) <- "UTF-8"
+  string <- stringr::str_replace_all(string, "Á", "A")
+  string <- stringr::str_replace_all(string, "É", "E")
+  string <- stringr::str_replace_all(string, "Í", "I")
+  string <- stringr::str_replace_all(string, "Ó", "O")
+  string <- stringr::str_replace_all(string, "Ú", "U")
+  
+  string <- stringr::str_replace_all(string, "á", "a")
+  string <- stringr::str_replace_all(string, "é", "e")
+  string <- stringr::str_replace_all(string, "í", "i")
+  string <- stringr::str_replace_all(string, "ó", "o")
+  string <- stringr::str_replace_all(string, "ú", "u")
+  
+  return(string)
+}
+
+cargar_csv_as_tibble <- function(file = 'inputs/df_EmpleoPublico.csv'){
   
   datos <- readr::read_csv(file)
   # Esto dice "Warning: 15 parsing failures." filo, no son tantos ¿?
