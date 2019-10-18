@@ -80,7 +80,7 @@ elimina_tildes <- function(string){
   return(string)
 }
 
-cargar_csv_as_tibble <- function(file = 'inputs/df_EmpleoPublico.csv'){
+cargar_csv_as_tibble <- function(file = 'inputs_csv/df_EmpleoPublico.csv'){
   
   datos <- readr::read_csv(file)
   # Esto dice "Warning: 15 parsing failures." filo, no son tantos ¿?
@@ -116,12 +116,54 @@ cargar_csv_as_tibble <- function(file = 'inputs/df_EmpleoPublico.csv'){
   return(d)
 }
 
+cargar_csv_as_bow <- function(file){
+  datos <- readr::read_csv(file)
+  
+  d <- datos %>%
+    select(Nombre) %>%
+    mutate(Nombre = tolower(Nombre)) %>%
+    mutate(Nombre2 = elimina_tildes(Nombre)) %>%
+    tidyr::gather() %>%
+    select(value) %>%
+    distinct() %>% #View()
+    as.vector() %>%
+    tm::VectorSource() %>%
+    tm::Corpus() %>%
+    tm::tm_map(tm::removeNumbers) %>%
+    tm::tm_map(tolower) %>%
+    tm::tm_map(tm::removePunctuation) %>%
+    tm::tm_map(function(x) tm::removeWords(x, tm::stopwords("es"))) %>%
+    tm::TermDocumentMatrix() %>%
+    tm::weightTf() %>%
+    extract2(6) %>%
+    extract2(1)
+  
+  return(d)
+}
+
 CrearMatrizDocumentos <- function(corpus, type='TermDocument', weight='Tf'){
-  # Utiliza funci?n "tm_map" de tm para limpiar/normalizar palabras del corpus
+  # Utiliza funcion "tm_map" de tm para limpiar/normalizar palabras del corpus
+  
+  # Creo una función que reemplaza un patron dado por un espacio. 
+  # Se usa un espacio y no simplemente eliminar, para que no se junten palabras de textos mal escritos:
+  # Ej: Supervisor (a)Asesor (a) Unidades Educativas
+  (to_spaces <- tm::content_transformer(function(x, pattern) gsub(pattern, " ", x)))
+  
+  # Uso la función to_spaces para eliminar lo que parezca una URL
+  corpus <- tm::tm_map(corpus, to_spaces, "(http[^ ]*)|(ftp[^ ]*)|(www\\.[^ ]*)")
+  
   corpus <- tm::tm_map(corpus, tm::removeNumbers)
   corpus <- tm::tm_map(corpus, tolower)
-  corpus <- tm::tm_map(corpus, tm::removePunctuation)
+  corpus <- tm::tm_map(corpus, to_spaces, "[[:punct:]]")
+  #corpus <- tm::tm_map(corpus, tm::removePunctuation)
   corpus <- tm::tm_map(corpus, function(x) tm::removeWords(x, tm::stopwords("es")))
+  
+  meses <- cargar_csv_as_bow('inputs_csv/meses.csv')
+  corpus <- tm::tm_map(corpus, function(x) tm::removeWords(x, meses))
+  
+  lugares <- cargar_csv_as_bow('inputs_csv/regiones-provincias-comunas.csv')
+  corpus <- tm::tm_map(corpus, function(x) tm::removeWords(x, lugares))
+  
   corpus <- tm::tm_map(corpus, tm::stemDocument, language = "spanish")
   
   # Crear matrix de terminos desde el corpus
