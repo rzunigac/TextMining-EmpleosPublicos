@@ -141,7 +141,7 @@ cargar_csv_as_bow <- function(file){
   return(d)
 }
 
-CrearMatrizDocumentos <- function(corpus, type='TermDocument', weight='Tf'){
+CrearMatriz <- function(corpus, type='TermDocument', weight='Tf'){
   # Utiliza funcion "tm_map" de tm para limpiar/normalizar palabras del corpus
   
   # Creo una función que reemplaza un patron dado por un espacio. 

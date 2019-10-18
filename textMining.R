@@ -12,10 +12,13 @@ library(magrittr)
 
 source("funciones.R", encoding="utf-8")
 
-datos_empleos <- cargar_csv_as_tibble()
+#datos_empleos <- cargar_csv_as_tibble()
+#saveRDS(datos_empleos, 'df_EmpleosPublicos.RDS')
+
+datos_empleos <- readRDS('df_EmpleosPublicos.RDS')
 
 df_corpus <- datos_empleos %>%
-  #filter(doc_id < 20) %>%
+  #filter(doc_id > 0 & doc_id < 5500) %>%
   mutate(text = paste(Cargo, 
                       if_else(is.na(Objetivo_del_cargo), "", Objetivo_del_cargo),
                       Area_de_trabajo,
@@ -25,12 +28,43 @@ df_corpus <- datos_empleos %>%
   select(doc_id, text) %>%
   as.data.frame()
 
+#Este corpus ya es fijo, se podría almacenar en RDS para no estarlo computando cada vez
 corpus <- tm::Corpus(tm::DataframeSource(df_corpus))
+
+#tm::inspect(corpus[30149])
+#tm::inspect(tm::tm_map(corpus[30149], tm::removePunctuation))
 #tm::inspect(corpus[1:2])
-#NLP::meta(corpus[[1]], "id")
+#NLP::meta(corpus[[2]], "text")
 
-dtm <- CrearMatrizDocumentos(corpus, type='TermDocument', weight='Tf')
+# Crear Matriz
+dtm <- CrearMatriz(corpus, type='TermDocument', weight='Tf')
 
+#dtm[,30149]
+#tm::inspect(dtm[,30149])
+#tm::inspect(corpus[38611])
+#View(dtm$dimnames$Terms)
 
+###########################
+### LDA 
+###########################
+
+#rm(list = c('datos_empleos', 'df_corpus', 'corpus'))
+
+burnin <- 4000
+iter <- 2000
+thin <- 500
+seed <-list(2003,5,63,100001,765)
+nstart <- 5
+best <- TRUE
+
+NumTopicos <- 3
+
+t <- proc.time()
+MatrizDatos <- as.matrix(dtm)
+# Generar el modelo de topicos usando LDA con muestreo basado en m?todo de Gibbs
+ldaOut <-topicmodels::LDA(MatrizDatos,k=NumTopicos,method ="Gibbs",control=list(nstart=nstart, seed = seed, best=best, burnin = burnin, iter = iter, thin=thin))
+proc.time() - t
+
+#rm(list = c('ldaOut'))
 
 
