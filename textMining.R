@@ -37,7 +37,7 @@ corpus <- tm::Corpus(tm::DataframeSource(df_corpus))
 #NLP::meta(corpus[[2]], "text")
 
 # Crear Matriz
-dtm <- CrearMatriz(corpus, type='TermDocument', weight='Tf')
+dtm <- CrearMatriz(corpus, type='DocumentTerm', weight='Tf')
 
 #dtm[,30149]
 #tm::inspect(dtm[,30149])
@@ -57,14 +57,39 @@ seed <-list(2003,5,63,100001,765)
 nstart <- 5
 best <- TRUE
 
-NumTopicos <- 3
+NumTopicos <- 20
 
 t <- proc.time()
 MatrizDatos <- as.matrix(dtm)
 # Generar el modelo de topicos usando LDA con muestreo basado en m?todo de Gibbs
-ldaOut <-topicmodels::LDA(MatrizDatos,k=NumTopicos,method ="Gibbs",control=list(nstart=nstart, seed = seed, best=best, burnin = burnin, iter = iter, thin=thin))
+ldaOut <-topicmodels::LDA(dtm,k=NumTopicos,method ="Gibbs",control=list(nstart=nstart, seed = seed, best=best, burnin = burnin, iter = iter, thin=thin))
 proc.time() - t
 
 #rm(list = c('ldaOut'))
+
+#obtengo el numero del termino
+term[1] <- match(c('gestion'),ldaOut@terms)
+term[2] <- match(c('control'),ldaOut@terms)
+term[3] <- match(c('institucional'),ldaOut@terms)
+
+ldaOut@gamma[c(7,3,8),] %>% colSums()
+topicmodels::topics(ldaOut, 10)[,c(7,3,8)]
+
+
+topicos <- topicmodels::topics(ldaOut, 10)
+terminos <- topicmodels::terms(ldaOut, 10)
+
+View(ldaOut@terms)
+View(topicos)
+View(terminos)
+
+View(ldaOut@gamma)
+
+rowTotals <- apply(dtm , 1, sum)
+View(rowTotals)
+
+
+
+
 
 
