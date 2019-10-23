@@ -19,12 +19,14 @@ datos_empleos <- readRDS('df_EmpleosPublicos.RDS')
 
 df_corpus <- datos_empleos %>%
   #filter(doc_id > 0 & doc_id < 5500) %>%
-  mutate(text = paste(Cargo, 
+  select(doc_id, Cargo, Objetivo_del_cargo, Area_de_trabajo) %>%
+  filter(!rowSums(is.na(.)) >= 3) %>%
+  mutate(text = paste(if_else(is.na(Cargo), "", Cargo), 
                       if_else(is.na(Objetivo_del_cargo), "", Objetivo_del_cargo),
-                      Area_de_trabajo,
+                      if_else(is.na(Area_de_trabajo), "", Area_de_trabajo),
                       sep = " "
                       )
-         ) %>%
+        ) %>%
   select(doc_id, text) %>%
   as.data.frame()
 
