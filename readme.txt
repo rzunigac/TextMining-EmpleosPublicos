@@ -1,4 +1,6 @@
-Archivo textMining.R
+########################
+# Archivo textMining.R #
+########################
 
 En este archivo se procesa los datos entregados y se generan los modelos, a continuación se describe el proceso realizado.
 
@@ -28,8 +30,9 @@ Inicialmente se crea un modelo con 30 tópicos, el cual entrega resultados defic
 
 Debido al alto tiempo que tarda la generación de los modelos no fue posible experimentar con otras cantidades de tópicos.
 
-
-Archivo modeloLDA.R
+#######################
+# Archivo modeloLDA.R #
+#######################
 
 El modelo generado es probado con algunas búsquedas. 
 Se utilizan 2 funciones:
