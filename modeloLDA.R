@@ -45,10 +45,10 @@ documentos_por_topico <- function(ldaModel, topico = 1){
 
 
 
-ldaOut_guardado <- readRDS('ldaOut.RDS')
+ldaOut_guardado <- readRDS('ldaOut100.RDS')
 corpus_guardado <- readRDS('corpus.RDS')
 
-#Funciona Mal
+#Funciona Mejor
 topico <- buscar_topico(ldaOut_guardado, 'computación')
 documentos <- documentos_por_topico(ldaOut_guardado, topico)
 tm::inspect(corpus_guardado[documentos])
@@ -65,5 +65,15 @@ tm::inspect(corpus_guardado[documentos])
 
 #Funciona Bien
 topico <- buscar_topico(ldaOut_guardado, 'educadora de párvulos')
+documentos <- documentos_por_topico(ldaOut_guardado, topico)
+tm::inspect(corpus_guardado[documentos])
+
+#Funciona bine, salen cosas de conaf
+topico <- buscar_topico(ldaOut_guardado, 'agrónomo')
+documentos <- documentos_por_topico(ldaOut_guardado, topico)
+tm::inspect(corpus_guardado[documentos])
+
+#PESIMO!
+topico <- buscar_topico(ldaOut_guardado, 'sociólogo')
 documentos <- documentos_por_topico(ldaOut_guardado, topico)
 tm::inspect(corpus_guardado[documentos])
