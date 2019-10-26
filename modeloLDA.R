@@ -43,37 +43,51 @@ documentos_por_topico <- function(ldaModel, topico = 1){
   return(documentos_id)
 }
 
-
+corpus_to_df <- function(corpus){
+  df <- data.frame(doc_id=character(), text=character(), stringsAsFactors = FALSE)
+  
+  for (i in 1:length(corpus)) {
+    df[nrow(df)+1,] = c(
+      names(corpus)[i],
+      corpus[[i]][['content']]
+      )  
+  }
+  
+  return(df)
+}
 
 ldaOut_guardado <- readRDS('ldaOut100.RDS')
 corpus_guardado <- readRDS('corpus.RDS')
 
-#Funciona Mejor
-topico <- buscar_topico(ldaOut_guardado, 'computación')
-documentos <- documentos_por_topico(ldaOut_guardado, topico)
-tm::inspect(corpus_guardado[documentos])
-
-#Funciona Mal
-topico <- buscar_topico(ldaOut_guardado, 'ingeniero electrónico')
-documentos <- documentos_por_topico(ldaOut_guardado, topico)
-tm::inspect(corpus_guardado[documentos])
-
-#Funciona Bien
-topico <- buscar_topico(ldaOut_guardado, 'abogado')
-documentos <- documentos_por_topico(ldaOut_guardado, topico)
-tm::inspect(corpus_guardado[documentos])
-
-#Funciona Bien
-topico <- buscar_topico(ldaOut_guardado, 'educadora de párvulos')
-documentos <- documentos_por_topico(ldaOut_guardado, topico)
-tm::inspect(corpus_guardado[documentos])
-
-#Funciona bine, salen cosas de conaf
-topico <- buscar_topico(ldaOut_guardado, 'agrónomo')
-documentos <- documentos_por_topico(ldaOut_guardado, topico)
-tm::inspect(corpus_guardado[documentos])
-
-#PESIMO!
-topico <- buscar_topico(ldaOut_guardado, 'sociólogo')
-documentos <- documentos_por_topico(ldaOut_guardado, topico)
-tm::inspect(corpus_guardado[documentos])
+# Ejemplos para correr manualmente, el IF es para evitar que se ejecute al cargar la APP shiny.
+if (FALSE) {
+  #Funciona Mejor
+  topico <- buscar_topico(ldaOut_guardado, 'computación')
+  documentos <- documentos_por_topico(ldaOut_guardado, topico)
+  tm::inspect(corpus_guardado[documentos])
+  
+  #Funciona Mal
+  topico <- buscar_topico(ldaOut_guardado, 'ingeniero electrónico')
+  documentos <- documentos_por_topico(ldaOut_guardado, topico)
+  tm::inspect(corpus_guardado[documentos])
+  
+  #Funciona Bien
+  topico <- buscar_topico(ldaOut_guardado, 'abogado')
+  documentos <- documentos_por_topico(ldaOut_guardado, topico)
+  tm::inspect(corpus_guardado[documentos])
+  
+  #Funciona Bien
+  topico <- buscar_topico(ldaOut_guardado, 'educadora de párvulos')
+  documentos <- documentos_por_topico(ldaOut_guardado, topico)
+  tm::inspect(corpus_guardado[documentos])
+  
+  #Funciona bine, salen cosas de conaf
+  topico <- buscar_topico(ldaOut_guardado, 'agrónomo')
+  documentos <- documentos_por_topico(ldaOut_guardado, topico)
+  tm::inspect(corpus_guardado[documentos])
+  
+  #PESIMO!
+  topico <- buscar_topico(ldaOut_guardado, 'sociólogo')
+  documentos <- documentos_por_topico(ldaOut_guardado, topico)
+  tm::inspect(corpus_guardado[documentos])
+}

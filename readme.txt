@@ -14,13 +14,13 @@ Con el dataframe generado en el paso 1) se genera el corpus de documentos. Para 
 
 3) Procesados del corpus y creación de matriz de documentos
 Se utiliza la función CrearMatriz, se realiza los siguientes pasos:
-  - Se eliminan URLs mediante expresiones regulares.
-- Se eliminan numeros mediante tm::removeNumbers.
-- Se eliminan elementos de puntuación.
-- Se eliminan stopwords del idioma español.
-- Se eliminan meses (enero, febrero, etc.) a partir de una lista csv.
-- Se eliminan regiones, provincias y comunas a partir de una lista csv.
-- Se realiza el steming de los terminos
+ - Se eliminan URLs mediante expresiones regulares.
+ - Se eliminan numeros mediante tm::removeNumbers.
+ - Se eliminan elementos de puntuación.
+ - Se eliminan stopwords del idioma español.
+ - Se eliminan meses (enero, febrero, etc.) a partir de una lista csv.
+ - Se eliminan regiones, provincias y comunas a partir de una lista csv.
+ - Se realiza el steming de los terminos
 
 Finalmente se genera la matriz.
 
@@ -36,8 +36,15 @@ Debido al alto tiempo que tarda la generación de los modelos no fue posible exp
 
 El modelo generado es probado con algunas búsquedas. 
 Se utilizan 2 funciones:
-  1) buscar_topico(): a partir de un modelo LDA y un string de busqueda dado, procesa el string tal como se procesó el corpus original, para obtener las palabras que debieran buscarse en el modelo (filtradas y con stemming). Luego se obtiene la probabilidad de cada tópico para cada uno de los terminos buscados. Se suman las probabilidades de cada termino por cada uno de los tópicos, obteniendo una lista de topicos para la busqueda completa. Finalmente se retorna el topico con el valor más alto.
+
+1) buscar_topico(): a partir de un modelo LDA y un string de busqueda dado, procesa el string tal como se procesó el corpus original, para obtener las palabras que debieran buscarse en el modelo (filtradas y con stemming). Luego se obtiene la probabilidad de cada tópico para cada uno de los terminos buscados. Se suman las probabilidades de cada termino por cada uno de los tópicos, obteniendo una lista de topicos para la busqueda completa. Finalmente se retorna el topico con el valor más alto.
 
 2) documentos_por_topico(): Dado el modelo y el topico, se retorna los IDs de los 10 documentos principales asociados a dicho tópico.
 
 Finalmente se utiliza la función tm::inspect() para filtrar el corpus a partir de los id obtenidos. 
+
+#################
+# Archivo app.R #
+#################
+
+Shiny web application, en la que se ingresa un string de búsqueda y mediante las funciones definidas en el archivo modeloLDA.R, se obtiene una lista de los principales 10 documentos del tópico seleccionado.
