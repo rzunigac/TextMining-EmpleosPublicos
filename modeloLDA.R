@@ -56,8 +56,8 @@ corpus_to_df <- function(corpus){
   return(df)
 }
 
-ldaOut_guardado <- readRDS('ldaOut100.RDS')
-corpus_guardado <- readRDS('corpus.RDS')
+ldaOut_guardado <- readRDS('rds/ldaOut100.RDS')
+corpus_guardado <- readRDS('rds/corpus.RDS')
 
 # Ejemplos para correr manualmente, el IF es para evitar que se ejecute al cargar la APP shiny.
 if (FALSE) {

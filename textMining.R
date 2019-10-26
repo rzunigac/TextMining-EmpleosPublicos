@@ -6,9 +6,9 @@ source("funciones.R", encoding="utf-8")
 # 1) Limpieza de los datos
 # Se genera una versión limpia de los datos, se almacena y se guarda para evitar reprocesar cada vez.
 #datos_empleos <- cargar_csv_as_tibble()
-#saveRDS(datos_empleos, 'df_EmpleosPublicos.RDS')
+#saveRDS(datos_empleos, 'rds/df_EmpleosPublicos.RDS')
 
-datos_empleos <- readRDS('df_EmpleosPublicos.RDS')
+datos_empleos <- readRDS('rds/df_EmpleosPublicos.RDS')
 
 # 2) Creación del Corpus
 df_corpus <- datos_empleos %>%
@@ -27,7 +27,7 @@ df_corpus <- datos_empleos %>%
 # 3) Procesados del corpus y creación de matriz de documentos
 #Este corpus ya es fijo, se almacena en RDS para no estarlo computando cada vez
 corpus <- tm::Corpus(tm::DataframeSource(df_corpus))
-#saveRDS(corpus, 'corpus.RDS')
+#saveRDS(corpus, 'rds/corpus.RDS')
 
 # Crear Matriz
 dtm <- CrearMatriz(corpus, type='DocumentTerm', weight='Tf')
@@ -51,7 +51,7 @@ MatrizDatos <- as.matrix(dtm)
 ldaOut <-topicmodels::LDA(dtm,k=NumTopicos,method ="Gibbs",control=list(nstart=nstart, seed = seed, best=best, burnin = burnin, iter = iter, thin=thin))
 proc.time() - t
 
-#saveRDS(ldaOut, 'ldaOut100.RDS')
+#saveRDS(ldaOut, 'rds/ldaOut100.RDS')
 
 
 
