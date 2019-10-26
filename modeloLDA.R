@@ -46,8 +46,13 @@ documentos_por_topico <- function(ldaModel, topico = 1){
 corpus_to_df <- function(corpus){
   df <- data.frame(doc_id=character(), text=character(), stringsAsFactors = FALSE)
   
+  if(length(corpus) == 0){
+    df[1, ] = c('ERROR', 'No se encontraron documentos')
+    return(df)
+  }
+  
   for (i in 1:length(corpus)) {
-    df[nrow(df)+1,] = c(
+    df[nrow(df)+1, ] = c(
       names(corpus)[i],
       corpus[[i]][['content']]
       )  
